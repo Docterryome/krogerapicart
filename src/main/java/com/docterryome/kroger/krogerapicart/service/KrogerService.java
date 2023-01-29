@@ -30,13 +30,16 @@ public class KrogerService {
 
 
     public KrogerToken getBearerToken(String type){
-        if(type == "cart"){
+           System.out.println("The type " + type);
+        if(type.equals("cart")){
+                System.out.println("Getting Cart Token");
             return this.getCartToken();
         }
-        else if(type == "product"){
+        else if(type.equals("product")){
+                System.out.println("Getting Product Token");
             return this.getProductToken();
         }
-        else if(type == "profile"){
+        else if(type.equals("profile")){
             return this.getProfileToken();
         }
         else {
@@ -58,6 +61,7 @@ public class KrogerService {
 
     @Cacheable("productToken")
     private KrogerToken getProductToken(){
+        System.out.println("Getting Token!");
         return this.webClient.post()
         .uri("/connect/oauth2/token")
         .contentType(MediaType.APPLICATION_FORM_URLENCODED)

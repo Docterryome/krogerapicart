@@ -2,8 +2,6 @@
 
 This application is a recipe builder application.
 
-
-
 ## Goal
 
 The goal of this application is to allow a user to enter or import a recepie, and will tell the price it will take to make that recipe using the wallmart affliate api.
