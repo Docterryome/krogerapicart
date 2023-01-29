@@ -2,8 +2,10 @@ package com.docterryome.kroger.krogerapicart.controller;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.docterryome.kroger.krogerapicart.domain.KrogerDataList;
 import com.docterryome.kroger.krogerapicart.domain.KrogerStoreData;
 import com.docterryome.kroger.krogerapicart.domain.KrogerToken;
 import com.docterryome.kroger.krogerapicart.service.KrogerService;
@@ -25,5 +27,10 @@ public class KrogerController {
     @RequestMapping("/location/{zipCode}")
     public KrogerStoreData getKrogerStoreData(@PathVariable String zipCode){
         return this.krogerService.getLocations(zipCode);
+    }
+
+    @RequestMapping("/products")
+    public KrogerDataList getProductDetails(@RequestParam String locationId, @RequestParam String productSearch){
+        return this.krogerService.getDataList(locationId, productSearch);
     }
 }

@@ -7,8 +7,10 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.UriBuilder;
 
 import com.docterryome.kroger.krogerapicart.config.KrogerConfig;
+import com.docterryome.kroger.krogerapicart.domain.KrogerDataList;
 import com.docterryome.kroger.krogerapicart.domain.KrogerStoreData;
 import com.docterryome.kroger.krogerapicart.domain.KrogerToken;
 
@@ -106,5 +108,16 @@ public class KrogerService {
         .onStatus(httpStatus -> httpStatus.is4xxClientError(), response -> response.bodyToMono(String.class).map(Exception::new))
         .bodyToMono(KrogerStoreData.class)
         .block();
-    }
+}
+        public KrogerDataList getDataList(String locationId, String itemSearch){
+            return this.webClient.get()
+            .uri(uriBuilder -> uriBuilder.path("/products")
+            .queryParam("filter.locationId", locationId)
+            .queryParam("filter.term", itemSearch)
+            .build())
+            .headers(httpHeaders -> httpHeaders.setBearerAuth(this.getBearerToken("product").getAccess_token()))
+            .retrieve()
+            .bodyToMono(KrogerDataList.class)
+            .block();
+        }
 }
