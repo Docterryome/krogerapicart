@@ -33,7 +33,6 @@ public class RecipeController {
     public ResponseEntity<?> addRecipe(@RequestBody Recipe recipe){
         recipeRepository.save(recipe);
         return new ResponseEntity<>(HttpStatus.CREATED);
-    }
-
+    }     
     
 }

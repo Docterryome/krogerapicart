@@ -6,7 +6,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,5 +22,6 @@ public class Recipe {
     private Long id;
     private String title;
     @OneToMany(cascade=CascadeType.ALL)
-    private Ingredient[] ingredients; 
+    private Ingredient[] ingredients;
+    private String directions;
 }

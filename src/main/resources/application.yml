@@ -14,6 +14,13 @@ spring:
     cache-names: cartToken, productToken, profileToken, publicToken
     caffeine:
       spec: expireAfterAccess=1800s
+  security:
+    ouath2:
+      client:
+        registration:
+          kroger:
+            clientId: ${CLIENT_ID}
+            clientSecret: ${CLIENT_SECRET}
 kroger:
   client:
     id: ${CLIENT_ID}

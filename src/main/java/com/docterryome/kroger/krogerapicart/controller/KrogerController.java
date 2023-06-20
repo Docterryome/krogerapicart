@@ -1,5 +1,9 @@
 package com.docterryome.kroger.krogerapicart.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,7 +34,23 @@ public class KrogerController {
     }
 
     @RequestMapping("/products")
-    public KrogerDataList getProductDetails(@RequestParam String locationId, @RequestParam String productSearch){
-        return this.krogerService.getDataList(locationId, productSearch);
+    public List<HashMap<String,String>> getProductDetails(@RequestParam String locationId, @RequestParam String productSearch){
+        KrogerDataList dataList = this.krogerService.getDataList(locationId, productSearch);
+        List<HashMap<String, String>> fMaps = new ArrayList<HashMap<String, String>>();
+        dataList.getData().forEach(data -> {
+            HashMap<String, String> map = new HashMap<>();
+            map.put("kroger.productId", data.getProductId());
+            map.put("kroger.description", data.getDescription());
+            map.put("kroger.upc", data.getUpc());
+            map.put("kroger.brand", data.getBrand());
+            data.getItems().forEach(item -> {
+                map.put("kroger.itemId", item.getItemId());
+                map.put("kroger.itemSize", item.getSize());
+                map.put("kroger.price.regular", String.valueOf(item.getPrice().getRegular()));
+                map.put("kroger.price.promo", String.valueOf(item.getPrice().getPromo()));
+            });
+            fMaps.add(map);
+        });
+        return fMaps;
     }
 }
