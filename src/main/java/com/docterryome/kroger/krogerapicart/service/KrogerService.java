@@ -52,7 +52,7 @@ public class KrogerService {
     @Cacheable("cartToken")
     private KrogerToken getCartToken(){
         return this.webClient.post()
-        .uri("/connect/oauth2/token")
+        .uri("/connect/oauth2/authorized")
         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
         .body(BodyInserters.fromFormData("grant_type", "client_credentials")
         .with("scope", "cart.basic.write"))

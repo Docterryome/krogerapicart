@@ -19,8 +19,14 @@ spring:
       client:
         registration:
           kroger:
-            clientId: ${CLIENT_ID}
-            clientSecret: ${CLIENT_SECRET}
+            client-id: ${CLIENT_ID}
+            client-secret: ${CLIENT_SECRET}
+            scope: cart.basic:write
+        provider:
+          kroger:
+            authorization-uri: https://api.kroger.com/v1/connect/oauth2/authorize
+
+
 kroger:
   client:
     id: ${CLIENT_ID}
