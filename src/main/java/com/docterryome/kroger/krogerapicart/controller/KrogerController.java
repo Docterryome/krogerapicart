@@ -17,7 +17,6 @@ import com.docterryome.kroger.krogerapicart.domain.KrogerStoreData;
 import com.docterryome.kroger.krogerapicart.domain.KrogerToken;
 import com.docterryome.kroger.krogerapicart.service.KrogerService;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
@@ -34,21 +33,24 @@ public class KrogerController {
     }
 
 
+
+
     @RequestMapping("/kroger/login")
     public void krogerLogin(HttpServletResponse response){
         response.addHeader("Content-Type","application/x-www-form-urlencoded");
         response.addHeader("Cache-Control", "no-cache");
-        response.addHeader("location", URL + "?scope=art.basic.write&response_type=code&client_id=" 
+        response.addHeader("location", URL + "?scope=cart.basic:write&response_type=code&client_id=" 
         + this.krogerConfig.getId() + "&redirect_uri=http://localhost:8080/kroger/callback");
         response.setStatus(302);
     }
 
     @RequestMapping("kroger/callback")
     public void getStuffFromResponse(@RequestParam String code){
-        System.out.println(code);
+        KrogerToken krogerToken = this.krogerService.getCartToken(code);
+        System.out.println(krogerToken.getAccess_token());
     }
 
-    @RequestMapping("/kroger/{type}")
+    @RequestMapping("/kroger/token/{type}")
     public KrogerToken getToken(@PathVariable String type){
         return this.krogerService.getBearerToken(type);
     }
@@ -62,6 +64,7 @@ public class KrogerController {
     public List<HashMap<String,String>> getProductDetails(@RequestParam String locationId, @RequestParam String productSearch){
         KrogerDataList dataList = this.krogerService.getDataList(locationId, productSearch);
         List<HashMap<String, String>> fMaps = new ArrayList<HashMap<String, String>>();
+    
         dataList.getData().forEach(data -> {
             HashMap<String, String> map = new HashMap<>();
             map.put("kroger.productId", data.getProductId());
@@ -69,10 +72,18 @@ public class KrogerController {
             map.put("kroger.upc", data.getUpc());
             map.put("kroger.brand", data.getBrand());
             data.getItems().forEach(item -> {
+                try {
                 map.put("kroger.itemId", item.getItemId());
                 map.put("kroger.itemSize", item.getSize());
                 map.put("kroger.price.regular", String.valueOf(item.getPrice().getRegular()));
                 map.put("kroger.price.promo", String.valueOf(item.getPrice().getPromo()));
+                }catch(Exception e){
+                System.out.println("Error geting price for product ignore it!");
+                map.put("kroger.itemId", "NA");
+                map.put("kroger.itemSize", "NA");
+                map.put("kroger.price.regular", "9999999999");
+                map.put("kroger.price.promo", "9999999999");
+                }
             });
             fMaps.add(map);
         });

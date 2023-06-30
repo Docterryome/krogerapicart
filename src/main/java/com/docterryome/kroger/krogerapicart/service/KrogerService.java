@@ -33,11 +33,7 @@ public class KrogerService {
 
     public KrogerToken getBearerToken(String type){
            System.out.println("The type " + type);
-        if(type.equals("cart")){
-                System.out.println("Getting Cart Token");
-            return this.getCartToken();
-        }
-        else if(type.equals("product")){
+        if(type.equals("product")){
                 System.out.println("Getting Product Token");
             return this.getProductToken();
         }
@@ -50,12 +46,13 @@ public class KrogerService {
     }
 
     @Cacheable("cartToken")
-    private KrogerToken getCartToken(){
+    public KrogerToken getCartToken(String code){
         return this.webClient.post()
-        .uri("/connect/oauth2/authorized")
+        .uri("/connect/oauth2/token")
         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-        .body(BodyInserters.fromFormData("grant_type", "client_credentials")
-        .with("scope", "cart.basic.write"))
+        .body(BodyInserters.fromFormData("grant_type", "authorization_code")
+        .with("code", code)
+        .with("redirect_uri", "http://localhost:8080"))
         .retrieve()
         .bodyToMono(KrogerToken.class)
         .block();
